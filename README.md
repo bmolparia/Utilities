@@ -34,4 +34,4 @@ Has a useful **Jobs** object which can be initialized using a python list object
 * *isRunning* - Takes a job ID as input and returns True if the job is running else returns False
 
 ### Bound Methods
-`*submit_job*` - Submits the initialized job object to the cluster and returns the job ID
+*submit_job* - Submits the initialized job object to the cluster and returns the job ID
