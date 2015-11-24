@@ -9,7 +9,7 @@ For checking if GTF is sorted:
 ```python gtf_parser.py -c GTF_FILE_PATH -v VARIABLES_TO_SORT_BY```
 
 
-### Arguments:
+#### Arguments:
    
     -h, --help    show the help message and exit
     -i GTF        Path to gtf file to sort
@@ -20,7 +20,7 @@ For checking if GTF is sorted:
                   the key word attributes separated by a ":" and separated by a
                   semicolon. For example -
     
-                  ```start,source,attributes:gene_id;transcript_id```
+                  start,source,attributes:gene_id;transcript_id
 
 
 
