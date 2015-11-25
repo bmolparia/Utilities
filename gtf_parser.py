@@ -134,13 +134,14 @@ def sort_gtf(file_name, output, variables):
         else:
             gtf_lists[gtf_line.seqname] = [gtf_line]
 
+    variables = variables.split(',')
     for seq in gtf_lists:
         gtf_list = gtf_lists[seq]
         gtf_list.sort(key=lambda x:  [get_gtf_attr(x,y) for y in variables] )
 
     # write the contents back to a file
     with open(output, 'w') as write_handle:
-        for seq in sorted(gtf_list):
+        for seq in sorted(gtf_lists):
             gtf_list = gtf_lists[seq]
             for gtf_obj in gtf_list:
                 write_handle.write(str(gtf_obj))
