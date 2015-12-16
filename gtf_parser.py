@@ -49,6 +49,10 @@ class GtfData(object):
                 re.split('\s*;\s*', self.attributes.strip().strip(';'))))  # convert attrs to dict
 
         self.start, self.end = int(self.start) , int(self.end)
+        try:
+            self.score = float(self.score)
+        except ValueError:
+            self.score = 0.0
 
     def __str__(self):
         

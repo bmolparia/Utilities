@@ -2,6 +2,8 @@
 ## GTF Parser
 
 Either performs proper sorting of GTF for PrimerSeq or checks if GTF is sorted.
+Note - The "score" field is parsed as a float and if it fails the str to float conversion then a value of 0.0 is assigned to it.
+
 For Sorting GTF: 
 ```python gtf_parser.py -i GTF_FILE_PATH -o OUTPUT_FILE_PATH -v VARIABLES_TO_SORT_BY(default: start position)```
 
