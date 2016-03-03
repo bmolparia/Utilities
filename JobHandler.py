@@ -1,4 +1,5 @@
 import subprocess as sp
+import time
 
 class UnkownJobError(Exception):
 	pass
@@ -16,7 +17,7 @@ class Jobs(object):
 		retry = 0
 		args = ['qsub']+args
 
-		while retry<5:
+        while retry<5:
 			p1     = sp.Popen(args,stdout=sp.PIPE)
 			StdOut = p1.communicate()
 			jobID  = StdOut[0].replace('\n','') 
@@ -28,9 +29,10 @@ class Jobs(object):
 			except:
 				retry += 1
 				time.sleep(retry*60) #Sleep for some time and then retry
+		return 'jobID'
+	    
+            
 
-		return jobID
-	
 	@staticmethod
 	def get_job_status(jobID):
 	
