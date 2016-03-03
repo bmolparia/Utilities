@@ -46,7 +46,6 @@ class Jobs(object):
 			try:
 				status = tm.split('job_state = ')[1].replace('\n','')
 			except IndexError:
-				print "Got that stupid error\n"
 				print tm
 
 		return status
