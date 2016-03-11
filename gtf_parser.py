@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # Copyright (C) 2012-2013  Collin Tokheim
 # Copyright (C) 2015-2016  Bhuvan Molparia
+#
+# Original code - https://github.com/ctokheim/PrimerSeq/blob/master/gtf.py
 # 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -40,14 +42,33 @@ class GtfData(object):
     """
     Separates out gtf parsing from iterating over records.
     """
-    def __init__(self, gtf_line_arr):
+    def __init__(self, gtf_line_arr, ftype):
         
         self.gtf_list = gtf_line_arr
         self.seqname, self.source, self.feature, self.start, self.end, self.score, self.strand, self.frame, self.attributes = gtf_line_arr  # These indexes are defined by the GTF spec
-        self.attributes = dict(
-            map(lambda x: re.split('\s+', x.replace('"', '')),
-                re.split('\s*;\s*', self.attributes.strip().strip(';'))))  # convert attrs to dict
 
+        if ftype == 'gtf':
+            try:
+                self.attributes = dict(
+                    map(lambda x: re.split('\s+', x.replace('"', '')),
+                        re.split('\s*;\s*', self.attributes.strip().strip(';'))))  # convert attrs to dict
+            except ValueError:
+                print(self)
+                print('Error: Badly formatted attributes')            
+                sys.exit()
+        elif ftype == 'gff':    
+            try:
+                self.attributes = dict(
+                    map(lambda x: re.split('=', x),
+                        re.split('\s*;\s*', self.attributes.strip().strip(';'))))
+            except ValueError:
+                print(self)
+                print('Error:Badly formatted attributes')            
+                sys.exit()
+
+        else:
+            raise TypeError('File type not supported')
+           
         self.start, self.end = int(self.start) , int(self.end)
         try:
             self.score = float(self.score)
@@ -61,9 +82,10 @@ class GtfData(object):
 
 class GTF_Parser(object):
 
-    def __init__(self,filepath):
+    def __init__(self,filepath,ftype):
         self.fin = open(filepath,'r')
-    
+        self.ftp = ftype
+
     def __iter__(self):
         return self
 
@@ -74,10 +96,10 @@ class GTF_Parser(object):
             fin.close()
             raise StopIteration
         elif line.startswith('#'):
-            self.next()
+            return self.next()
         else:    
             line = line.replace('\n','').split('\t')
-            data = GtfData(line) 
+            data = GtfData(line,self.ftp) 
             return data
 
 
@@ -124,17 +146,17 @@ def is_sorted(iterable, compare):
     return  all(imap(compare, a, b))
 
 
-def is_gtf_sorted(file_name, variables):
+def is_gtf_sorted(file_name,ftype,variables):
     """Returns Boolean for if gtf is sorted."""
-    mygtf_reader = GTF_Parser(file_name)
+    mygtf_reader = GTF_Parser(file_name,ftype)
     gtf_compare  = gtf_compare_wrapper(variables)
         
     return is_sorted(mygtf_reader, gtf_compare)
 
 
-def sort_gtf(file_name, output, variables):
+def sort_gtf(file_name, ftype, output, variables):
     gtf_lists = {}
-    for gtf_line in GTF_Parser(file_name):
+    for gtf_line in GTF_Parser(file_name,ftype):
         if gtf_line.seqname in gtf_lists:
             gtf_lists[gtf_line.seqname].append(gtf_line)
         else:
@@ -163,7 +185,13 @@ if __name__ == '__main__':
                         default='',
                         dest='gtf',
                         action='store',
-                        help='Path to gtf file to sort')
+                        help='path to gtf file to sort')
+    parser.add_argument('-f',
+                        type=str,
+                        default='gtf',
+                        dest='ftype',
+                        action='store',
+                        help="File type. Valid options are 'gff' or 'gtf', default 'gtf'")
     parser.add_argument('-o',
                         type=str,
                         default='',
@@ -189,14 +217,14 @@ if __name__ == '__main__':
 
     if args.gtf and args.output:
     
-        sort_gtf(args.gtf, args.output, args.sort_vars)  # do the work of sorting
+        sort_gtf(args.gtf, args.ftype, args.output, args.sort_vars)  # do the work of sorting
     
     elif args.is_sorted:
     
-        if is_gtf_sorted(args.is_sorted, args.sort_vars):
-            print '%s is correctly sorted' % (args.is_sorted, variables)
+        if is_gtf_sorted(args.is_sorted, args.ftype, args.sort_vars):
+            print '%s is correctly sorted' % (args.is_sorted)
         else:
-            print '%s is not correctly sorted. please sort before use.' % (args.is_sorted)
+            print '%s is not correctly sorted.' % (args.is_sorted)
     
     else:
         print 'You must enter either both the -i and -o options or just the -c option.'  

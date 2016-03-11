@@ -14,7 +14,8 @@ For checking if GTF is sorted:
 #### Arguments:
    
     -h, --help    show the help message and exit
-    -i GTF        Path to gtf file to sort
+    -i GTF/GFF    Path to gtf file to sort
+    -f FileType   Valid options are 'gff' or 'gtf', default 'gtf'
     -o OUTPUT     Path name of properly sorted gtf
     -c IS_SORTED  Path to gtf file to check if sorted correctly
     -v SORT_VARS  Comma separated list of vaiables to sort by, in the order that
