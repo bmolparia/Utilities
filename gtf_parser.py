@@ -70,7 +70,6 @@ class GTF_Parser(object):
     def next(self):
         fin = self.fin
         line = fin.readline()
-        print line
         if line == '':
             fin.close()
             raise StopIteration
