@@ -42,42 +42,67 @@ class GtfData(object):
     """
     Separates out gtf parsing from iterating over records.
     """
+    
+    class Attribute(object):
+        def __init__(self,attr_line,ftype):
+            self.atl = attr_line
+            self.ftp = ftype
+            self.att = self.parse_atl(ftype)
+
+        def parse_atl(self,ftype):
+            
+            if ftype == 'gtf':
+                try:
+                    attributes = dict(
+                        map(lambda x: re.split('\s+', x.replace('"', '')),
+                            re.split('\s*;\s*', self.atl.strip().strip(';'))))  # convert attrs to dict
+                except ValueError:
+                    print(self)
+                    print('Error: Badly formatted attributes')            
+                    sys.exit()
+            elif ftype == 'gff':    
+                try:
+                    attributes = dict(
+                        map(lambda x: re.split('=', x),
+                            re.split('\s*;\s*', self.atl.strip().strip(';'))))
+                except ValueError:
+                    print(self)
+                    print('Error:Badly formatted attributes')            
+                    sys.exit()
+
+            return attributes
+
+        def __str__(self):
+           
+            ftype = self.ftp
+            if ftype == 'gff':
+                return ('; ').join( map( lambda x:x[0]+'='+x[1] , [(key,value) for key,value in self.att.iteritems()] ) )
+            elif ftype == 'gtf':
+                return ('; ').join( map( lambda x:x[0]+' "'+x[1]+'"' , [(key,value) for key,value in self.att.iteritems()] ) )+';'
+            else:
+                raise TypeError('File type not supported') 
+
+                 
+
     def __init__(self, gtf_line_arr, ftype):
         
         self.gtf_list = gtf_line_arr
         self.seqname, self.source, self.feature, self.start, self.end, self.score, self.strand, self.frame, self.attributes = gtf_line_arr  # These indexes are defined by the GTF spec
+        self.gtf_list = [self.seqname, self.source, self.feature, self.start, self.end, self.score, self.strand, self.frame, self.attributes]
 
-        if ftype == 'gtf':
-            try:
-                self.attributes = dict(
-                    map(lambda x: re.split('\s+', x.replace('"', '')),
-                        re.split('\s*;\s*', self.attributes.strip().strip(';'))))  # convert attrs to dict
-            except ValueError:
-                print(self)
-                print('Error: Badly formatted attributes')            
-                sys.exit()
-        elif ftype == 'gff':    
-            try:
-                self.attributes = dict(
-                    map(lambda x: re.split('=', x),
-                        re.split('\s*;\s*', self.attributes.strip().strip(';'))))
-            except ValueError:
-                print(self)
-                print('Error:Badly formatted attributes')            
-                sys.exit()
-
-        else:
-            raise TypeError('File type not supported')
-           
+        self.attr_object = GtfData.Attribute(self.attributes,ftype) 
+        self.attributes = self.attr_object.att
         self.start, self.end = int(self.start) , int(self.end)
+        
         try:
             self.score = float(self.score)
         except ValueError:
             self.score = 0.0
 
     def __str__(self):
-        
-        return ('\t').join(self.gtf_list) + '\n'
+      
+        gtf_list = map(str,[self.seqname, self.source, self.feature, self.start, self.end, self.score, self.strand, self.frame, self.attr_object])
+        return ('\t').join(gtf_list) + '\n'
 
 
 class GTF_Parser(object):
