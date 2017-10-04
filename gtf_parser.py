@@ -84,10 +84,10 @@ class GtfData(object):
             ftype = self.ftp
             if ftype == 'gff':
                 return ('; ').join( map( lambda x:x[0]+'='+x[1],
-                        [(key,value) for key,value in self.att.iteritems()] ) )
+                        [(key,value) for key,value in self.att.items()] ) )
             elif ftype == 'gtf':
                 return ('; ').join( map( lambda x:x[0]+' "'+x[1]+'"',
-                    [(key,value) for key,value in self.att.iteritems()] ) )+';'
+                    [(key,value) for key,value in self.att.items()] ) )+';'
             else:
                 raise TypeError('File type not supported')
 
