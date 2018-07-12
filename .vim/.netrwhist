@@ -1,0 +1,5 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhist_cnt =3
+let g:netrw_dirhist_1='/gpfs/group/torkamani/bhuvan/abundance/rnaseq/trinotate_test/trinity_out_dir'
+let g:netrw_dirhist_2='/gpfs/group/torkamani/bhuvan/tissue_network/sample_groups'
+let g:netrw_dirhist_3='/media/bhuvan/DRIVE1/ctDNA/cnv_detection/colorectal/analysis/tumor_cnvs'
