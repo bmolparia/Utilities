@@ -29,12 +29,16 @@ For checking if GTF is sorted:
 
 ## Job Handler
 
-Has a useful **Jobs** object which can be initialized using a python list object containing the commands for submitting a job.
+Has a few useful methods to submitting and interrogate PBS jobs
 
-### Static Methods -
+*submit_job* - Submits a job to the cluster and returns the job ID
+* *isRunning* - Takes a job ID as input and returns True if the job is running else returns False
 * *get_job_status* - Takes a job ID as input and returns the job status (R,H,C)
 * *multiple_jobs_completed* - Takes a list of job IDs and returns True if all of them are completed/cancelled and False if even one is running.
-* *isRunning* - Takes a job ID as input and returns True if the job is running else returns False
 
-### Bound Methods
-*submit_job* - Submits the initialized job object to the cluster and returns the job ID
+## Run Tests
+
+```
+cd tests
+nosetests
+```
