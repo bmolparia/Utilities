@@ -10,6 +10,10 @@
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 # GNU General Public License for more details.
+# 
+# This program contains a few methods to submit and interrogate jobs runnning
+# on a HPC cluster using the TORQUE resource manage.
+
 
 import shlex
 import subprocess as sp
