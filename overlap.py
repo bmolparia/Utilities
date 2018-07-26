@@ -58,7 +58,6 @@ def find_overlapping_bins(arr1, arr2):
 	'''
 
 	arr2_sc = SortedCollection(arr2, key = (lambda x: x[0]))
-
 	overlapping_bins = []
 	for bin in arr1:
 
@@ -77,35 +76,20 @@ def find_overlapping_bins(arr1, arr2):
 		if overlap_amt > 0:
 			overlaps.add_bin(closest_bin, overlap_amt)
 
-			# Go Right
-			flag = True
-			c = 1
-			while flag:
-				try:
-					next_bin = arr2[indx+c]
-					overlap_amt = get_overlap_amount(bin, next_bin)
-					if overlap_amt > 0:
-						overlaps.add_bin(next_bin, overlap_amt)
-					else:
-						flag = False
-					c += 1
-				except IndexError:
+		# Check bins after the closest for overlaps
+		flag = True
+		c = 1
+		while flag:
+			try:
+				next_bin = arr2[indx+c]
+				overlap_amt = get_overlap_amount(bin, next_bin)
+				if overlap_amt > 0:
+					overlaps.add_bin(next_bin, overlap_amt)
+				else:
 					flag = False
-
-			# Go Left
-			flag = True
-			c = -1
-			while flag:
-				try:
-					next_bin = arr2[indx+c]
-					overlap_amt = get_overlap_amount(bin, next_bin)
-					if overlap_amt > 0:
-						overlaps.add_bin(next_bin, overlap_amt)
-					else:
-						flag = False
-					c -= 1
-				except IndexError:
-					flag = False
+				c += 1
+			except IndexError:
+				flag = False
 
 		overlapping_bins.append(overlaps)
 
@@ -135,14 +119,12 @@ def get_overlap_amount(bin1,bin2):
 
 if __name__ == "__main__":
 
-	arr1 = [(5,15),(55,85),(106,127)]
-	arr2 = [(10,23),(41,62),(80,82),(106,125)]
+	arr1 = [(5,15),(55,85),(106,127),(132,142)]
+	arr2 = [(10,23),(41,48),(51,62),(80,82),(106,125)]
 
-	print(arr1)
-	print(arr2,'\n')
 	t = find_overlapping_bins(arr1, arr2)
 	for i in t:
-		print(i.overlapping_bins)
+		print(i.bin, i.overlapping_bins)
 
 	# o = Overlap((10,30),[(5,14),(21,27),(30,33)],[5,7,1])
 	# print(o.overlapping_bins)
