@@ -53,8 +53,9 @@ def find_overlapping_bins(arr1, arr2):
 	every bin in array 2. Accepts two arrays of tuples as inputs. Where each
 	tuple is the start and end site of a bin within that array.
 
-	Returns: An Overlap object containing bins in arr1, and the indices of all
-	the bins in arr2 it overlaps with.
+	Returns a list of Overlap objects for each bin in arr1. Each overlap
+	object contains the indices of all the bins in arr2 that a given arr1
+	bin overlaps with along with the amount of overlap represented as tuples.
 	'''
 
 	arr2_sc = SortedCollection(arr2, key = (lambda x: x[0]))
@@ -74,20 +75,19 @@ def find_overlapping_bins(arr1, arr2):
 
 		overlap_amt = get_overlap_amount(bin, closest_bin)
 		if overlap_amt > 0:
-			overlaps.add_bin(closest_bin, overlap_amt)
+			overlaps.add_bin(indx, overlap_amt)
 
 		# Check bins after the closest for overlaps
 		flag = True
-		c = 1
 		while flag:
+			indx += 1
 			try:
-				next_bin = arr2[indx+c]
+				next_bin = arr2[indx]
 				overlap_amt = get_overlap_amount(bin, next_bin)
 				if overlap_amt > 0:
-					overlaps.add_bin(next_bin, overlap_amt)
+					overlaps.add_bin(indx, overlap_amt)
 				else:
 					flag = False
-				c += 1
 			except IndexError:
 				flag = False
 
