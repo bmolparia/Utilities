@@ -28,7 +28,7 @@ class Overlap(object):
 
 	@property
 	def overlapping_bins(self):
-		return self._obin
+		pass
 
 	@overlapping_bins.getter
 	def overlapping_bins(self):
@@ -47,6 +47,15 @@ class Overlap(object):
 
 		self._obin.append(bin)
 		self._oamts.append(overlap_amt)
+
+	def get_sorted_bins(self,reverse=True):
+		''' Method to get a sorted list of sorted overlapping bins. Sorted by
+		their overlap content in descending order by default'''
+
+		overlapping_bins = self.overlapping_bins
+		overlapping_bins = sorted(overlapping_bins, key = lambda x: x[1],
+								reverse=reverse)
+		return overlapping_bins
 
 def find_overlapping_bins(arr1, arr2):
 	''' Function to calculate overlaps for every bin in array 1 against
@@ -124,7 +133,7 @@ if __name__ == "__main__":
 
 	t = find_overlapping_bins(arr1, arr2)
 	for i in t:
-		print(i.bin, i.overlapping_bins)
+		print(i.bin, i.get_sorted_bins())
 
 	# o = Overlap((10,30),[(5,14),(21,27),(30,33)],[5,7,1])
 	# print(o.overlapping_bins)
