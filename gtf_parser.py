@@ -76,7 +76,9 @@ class GtfData(object):
                     print(self)
                     print('Error:Badly formatted attributes')
                     sys.exit()
-
+            else:
+                raise TypeError('File must be of type gtf or gff')
+          
             return attributes
 
         def __str__(self):
